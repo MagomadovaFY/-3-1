@@ -163,6 +163,8 @@ def callback(ch, method, properties, body):
 
 ```
 # Результат выполнения: 
+
+```yaml
 [*] Ожидание сообщений. Нажмите CTRL+C для выхода
 [x] Получено: {"task": "register", "payload": {"email": "test@example.com", "password": "123"}}
 [✓] Результат: Пользователь test@example.com зарегистрирован
