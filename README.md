@@ -173,6 +173,7 @@ def callback(ch, method, properties, body):
 [x] Получено: {"task": "split_sentences", "payload": {"text": "Hello world! How are you? I am fine."}}
 [✓] Результат: ["Hello world", "How are you", "I am fine"]
 
+```
 # Вывод: 
 Разработанная система демонстрирует:
 
