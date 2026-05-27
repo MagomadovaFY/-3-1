@@ -107,3 +107,77 @@ services:
 ```
 **Запуск**
 docker-compose up -d
+
+
+## message_service.proto
+
+```yaml
+syntax = "proto3";
+
+package message;
+
+service MessageService {
+  rpc ProcessMessage (MessageRequest) returns (MessageResponse) {}
+}
+
+message MessageRequest {
+  string text = 1;
+}
+
+message MessageResponse {
+  string processed_text = 1;
+}
+
+
+```
+## grpc_server.py (фрагмент)
+
+```yaml
+class MessageService(...):
+    def ProcessMessage(self, request, context):
+        data = json.loads(request.text)
+        task_type = data["task"]
+        if task_type == "register":
+            return MessageResponse(processed_text=f"Пользователь {email} зарегистрирован")
+        elif task_type == "mime":
+            return MessageResponse(processed_text=mime)
+        elif task_type == "split_sentences":
+            return MessageResponse(processed_text=json.dumps(sentences))
+
+```
+## producer.py
+
+```yaml
+tasks = {
+    "register": {"task": "register", "payload": {"email": "test@example.com"}},
+    "mime": {"task": "mime", "payload": {"filename": "photo.jpg"}},
+    "split_sentences": {"task": "split_sentences", "payload": {"text": "Hello world! How are you? I am fine."}}
+}
+```
+## consumer.py
+
+```yaml
+def callback(ch, method, properties, body):
+    result = call_grpc(body.decode())
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
+```
+# Результат выполнения: 
+[*] Ожидание сообщений. Нажмите CTRL+C для выхода
+[x] Получено: {"task": "register", "payload": {"email": "test@example.com", "password": "123"}}
+[✓] Результат: Пользователь test@example.com зарегистрирован
+[x] Получено: {"task": "mime", "payload": {"filename": "photo.jpg"}}
+[✓] Результат: image/jpeg
+[x] Получено: {"task": "split_sentences", "payload": {"text": "Hello world! How are you? I am fine."}}
+[✓] Результат: ["Hello world", "How are you", "I am fine"]
+
+# Вывод: 
+Разработанная система демонстрирует:
+
+Синхронное взаимодействие через gRPC (часть 1).
+
+Асинхронную обработку задач через брокер RabbitMQ (часть 2).
+
+Полную независимость producer и consumer.
+
+Успешную обработку трёх заданий варианта 11.
